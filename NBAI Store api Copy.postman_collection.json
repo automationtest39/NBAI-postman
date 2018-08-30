@@ -1,0 +1,716 @@
+{
+	"info": {
+		"_postman_id": "c936c5fa-c11b-49c0-bf77-cf156177547d",
+		"name": "NBAI Store api Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sign In",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "95fb9c04-dee8-4d38-aa87-1eae1bd02ecf",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"authzCode\", jsonData.token.secret)",
+							"",
+							"pm.test(\"My account will be signed in\", function () {",
+							"    pm.expect(jsonData.user.userName).to.eql(\"justinchenmtl@gmail.com\");",
+							"    pm.expect(jsonData.user.deleted).to.eql(false);",
+							"});",
+							"",
+							"pm.test(\"birthday will be null\", function () {",
+							"    pm.expect(jsonData.user.birthday).to.eql(null);",
+							"});",
+							"",
+							"console.log(\"authzCode\")",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"userName\":\"justinchenmtl@gmail.com\",\n\"password\":\"123456\"\n}"
+				},
+				"url": {
+					"raw": "http://192.168.88.216:8080/nbmarketqa/api/login?",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"88",
+						"216"
+					],
+					"port": "8080",
+					"path": [
+						"nbmarketqa",
+						"api",
+						"login"
+					],
+					"query": [
+						{
+							"key": "userName",
+							"value": "justinchenmtl@gmail.com",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign Up",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "07536978-9927-42c8-bf2d-88c9be1a160d",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 409\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Account is already created\", function () {",
+							"    pm.expect(jsonData.cause).to.eql(\"Duplicate Email found.\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"justinchenmtl@gmail.com\",\n\"regPassword\":\"123456\"\n}"
+				},
+				"url": {
+					"raw": "http://192.168.88.216:8080/nbmarketqa/customer/register.json?",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"88",
+						"216"
+					],
+					"port": "8080",
+					"path": [
+						"nbmarketqa",
+						"customer",
+						"register.json"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "justinchenmtl@gmail.com",
+							"disabled": true
+						},
+						{
+							"key": "regPassword",
+							"value": "123456",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "根据SKU 获取商品信息",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b3c6cf80-36fe-456c-b835-f3e203904611",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							" ",
+							"",
+							"pm.test(\"Sku is verified\", function () {",
+							"    pm.expect(jsonData.product.sku).to.eql(\"NBSHIRT@BLACK@SMALL\");",
+							"});",
+							"",
+							"pm.test(\"Promotion is verified\", function () {",
+							"    pm.expect(jsonData.product.isPromoting).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(300);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Language is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Language\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\":\"403\"}"
+				},
+				"url": {
+					"raw": "http://192.168.88.216:8080/nbmarketqa/products/search.json?sku=NBSHIRT@BLACK@SMALL",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"88",
+						"216"
+					],
+					"port": "8080",
+					"path": [
+						"nbmarketqa",
+						"products",
+						"search.json"
+					],
+					"query": [
+						{
+							"key": "sku",
+							"value": "NBSHIRT@BLACK@SMALL"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "获取用户个人信息",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "83b0e649-e6e6-4f04-9845-675cbdbaa75b",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Verifer information in my personal account('user' wiil be change to lowercase or uppercase\" , function () {",
+							"    pm.expect(jsonData.User.userName).to.eql(\"justinchenmtl@gmail.com\");",
+							"    pm.expect(jsonData.User.email).to.eql(\"justinchenmtl@gmail.com\");",
+							"    pm.expect(jsonData.User.activateCode).to.eql(\"1qBCdMbY\")",
+							"});",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202,200]);",
+							"});",
+							"",
+							"pm.test(\"Verifer information in addressList\" , function () {",
+							"    pm.expect(jsonData.User.addressList[8].firstName).to.eql(\"justin\");",
+							"    pm.expect(jsonData.User.addressList[8].lastName).to.eql(\"chen\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "username",
+						"value": "{{username}}"
+					},
+					{
+						"key": "authzCode",
+						"value": "{{authzCode}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.88.216:8080/nbmarketqa/customers/myAccount",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"88",
+						"216"
+					],
+					"port": "8080",
+					"path": [
+						"nbmarketqa",
+						"customers",
+						"myAccount"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "根据商店获取商品列表",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2f1b3832-81de-45ef-99f6-b27f06fa5b59",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Verifer production list\" , function () {",
+							"    pm.expect(jsonData.productPage.count).to.eql(5);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Language is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Language\");",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\":\"403\"}"
+				},
+				"url": {
+					"raw": "http://192.168.88.216:8080/nbmarketqa/products/search",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"88",
+						"216"
+					],
+					"port": "8080",
+					"path": [
+						"nbmarketqa",
+						"products",
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "创建订单",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "99d5073d-3c9d-47e0-8df0-76d82aaf1845",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Verifer shopName\" , function () {",
+							"    pm.expect(jsonData.order.shopName).to.eql(\"NBAI STORE\");",
+							"   ",
+							"});",
+							"",
+							"pm.test(\"FirstName and lastName will be verified in oder page\", function () {",
+							"    pm.expect(jsonData.order.shippingAddress.firstName).to.eql(\"justin\");",
+							"    pm.expect(jsonData.order.shippingAddress.lastName).to.eql(\"chen\");",
+							"    pm.expect(jsonData.order.shippingAddress.city).to.eql(\"Montreal\");",
+							"    pm.expect(jsonData.order.shippingAddress.country.name).to.eql(\"Canada\");  ",
+							"});",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201,202]);",
+							"});",
+							"",
+							"pm.globals.set(\"orderId\",jsonData.order.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authzCode",
+						"value": "{{authzCode}}"
+					},
+					{
+						"key": "username",
+						"value": "{{username}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"order\":{\"lineItemInOrderList\":[{\"product\":{\"id\":2},\"quantity\":5}],\"shippingAddress\":{\"province\":{\"code\":\"QC\"},\"country\":{\"code\":\"CA\"},\"address1\":\"1625 Maisonneuve\",\"address2\":\"\",\"city\":\"Montreal\",\"zip\":\"H3A\",\"phone\":5141231234,\"firstName\":\"justin\",\"lastName\":\"chen\",\"note\":\"note\", \"isDefault\": false}},\n\t\"shopId\":403}\n"
+				},
+				"url": {
+					"raw": "http://192.168.88.216:8080/nbmarketqa/orders/create",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"88",
+						"216"
+					],
+					"port": "8080",
+					"path": [
+						"nbmarketqa",
+						"orders",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "根据商品id 获取商品信息",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b5b65e86-5487-4996-b1bc-7b596ce73f12",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Body matches string product\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"product\");",
+							"});",
+							"",
+							"pm.test(\"Body matches string id\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"id\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.88.216:8080/nbmarketqa/products/product/2",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"88",
+						"216"
+					],
+					"port": "8080",
+					"path": [
+						"nbmarketqa",
+						"products",
+						"product",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "根据订单号获取订单详情",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "93ed0092-da56-4f8d-b6cd-8e522b19c126",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var jsonData = pm.response.json();",
+							"var a = pm.globals.get(\"orderId\");",
+							"",
+							"pm.test(\"Verifer order number\" , function () {",
+							"    pm.expect(jsonData.order.id).to.eql(a);",
+							"   ",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "username",
+						"value": "{{username}}"
+					},
+					{
+						"key": "authzCode",
+						"value": "{{authzCode}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.88.216:8080/nbmarketqa/customers/myAccount/orders/{{orderId}}",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"88",
+						"216"
+					],
+					"port": "8080",
+					"path": [
+						"nbmarketqa",
+						"customers",
+						"myAccount",
+						"orders",
+						"{{orderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "获取个人订单列表",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cc525940-c864-496a-ac8d-e211c2566a94",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"var a = pm.globals.get(\"orderId\");",
+							"",
+							"pm.test(\"Verifer order number\" , function () {",
+							"    pm.expect(jsonData.orderPage.list[0].id).to.eql(a);",
+							"});",
+							"",
+							"pm.test(\"Verifer order information\" , function () {",
+							"    pm.expect(jsonData.orderPage.list[0].shippingAddress.firstName).to.eql(\"justin\");",
+							"    pm.expect(jsonData.orderPage.list[0].shippingAddress.lastName).to.eql(\"chen\");",
+							"});",
+							"",
+							"pm.test(\"Verifer order information province\" , function () {",
+							"    pm.expect(jsonData.orderPage.list[0].shippingAddress.province.taxName).to.eql(\"QST\");",
+							"    pm.expect(jsonData.orderPage.list[0].shippingAddress.province.name).to.eql(\"Quebec\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authzCode",
+						"value": "{{authzCode}}"
+					},
+					{
+						"key": "username",
+						"value": "{{username}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.88.216:8080/nbmarketqa/customers/myAccount/orders",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"88",
+						"216"
+					],
+					"port": "8080",
+					"path": [
+						"nbmarketqa",
+						"customers",
+						"myAccount",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "查看用户个人信息",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "db60483c-4161-42f9-b92a-53fc0f1735e7",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Verifer personal information\" , function () {",
+							"    pm.expect(jsonData.User.userName).to.eql(\"justinchenmtl@gmail.com\");",
+							"    pm.expect(jsonData.User.activateCode).to.eql(\"1qBCdMbY\")",
+							"});",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202,200]);",
+							"});",
+							"",
+							"pm.test(\"Verifer information in addressList\" , function () {",
+							"    pm.expect(jsonData.User.addressList[8].firstName).to.eql(\"justin\");",
+							"    pm.expect(jsonData.User.addressList[8].lastName).to.eql(\"chen\");",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "username",
+						"value": "{{username}}"
+					},
+					{
+						"key": "authzCode",
+						"value": "{{authzCode}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.88.216:8080/nbmarketqa/customers/myAccount",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"88",
+						"216"
+					],
+					"port": "8080",
+					"path": [
+						"nbmarketqa",
+						"customers",
+						"myAccount"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "确认支付",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f421f82c-d19a-4d35-bacd-fa1000ecbbfd",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	]
+}
